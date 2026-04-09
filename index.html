@@ -1,0 +1,360 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  ChevronRight, 
+  ChevronLeft, 
+  ShieldCheck, 
+  Zap, 
+  Database, 
+  Users, 
+  Clock, 
+  HardHat, 
+  CheckCircle2, 
+  AlertTriangle,
+  FileSearch,
+  Cpu,
+  Mail,
+  MessageSquare
+} from 'lucide-react';
+
+const App = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      title: "The Structural Pivot",
+      subtitle: "From Digital Records to Autonomous Intelligence",
+      content: (
+        <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
+          <div className="bg-orange-600 p-5 rounded-3xl shadow-lg shadow-orange-900/20 animate-bounce">
+            <Cpu size={56} className="text-white" />
+          </div>
+          <div className="space-y-4">
+            <h1 className="text-6xl font-extrabold text-white tracking-tight">
+              ABC Construction: <span className="text-orange-500 italic">The AI Roadmap</span>
+            </h1>
+            <p className="text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+              Moving beyond record storage to a <span className="text-white font-semibold underline decoration-orange-500">Sovereign System of Intelligence</span> that reasons, alerts, and acts.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-12 w-full max-w-4xl mt-12 pt-12 border-t border-slate-800">
+            <div className="space-y-2">
+              <p className="text-orange-500 font-bold text-4xl">200+</p>
+              <p className="text-slate-500 uppercase tracking-widest text-xs font-bold">Connectors</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-orange-500 font-bold text-4xl">15 Hrs</p>
+              <p className="text-slate-500 uppercase tracking-widest text-xs font-bold">Saved Weekly</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-orange-500 font-bold text-4xl">10 YR</p>
+              <p className="text-slate-500 uppercase tracking-widest text-xs font-bold">Memory</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Gustav: Closing the Precon Risk Gap",
+      subtitle: "Turning Disconnected Files into a 'Digital PE'",
+      content: (
+        <div className="grid grid-cols-2 gap-10 h-full items-center">
+          <div className="space-y-8">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl">
+              <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                <AlertTriangle className="text-orange-500" /> The Profit Leak
+              </h3>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                Historical risk (scope gaps, "change order artists") is buried in your folders—it's there, but it's <span className="text-orange-400 font-semibold">unusable</span>.
+              </p>
+            </div>
+            <div className="bg-orange-600 p-8 rounded-3xl shadow-xl shadow-orange-900/20">
+              <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                <Zap className="text-white" /> The Digital PE
+              </h3>
+              <p className="text-white text-lg leading-relaxed">
+                This isn't a chatbot. It's a 24/7 Digital PE that proactively flags that a <span className="font-bold">window submittal doesn't match a revision from 3 weeks ago</span>—before the order is placed.
+              </p>
+            </div>
+          </div>
+          <div className="bg-slate-950 rounded-3xl p-10 border border-slate-800 relative h-[450px] flex flex-col justify-center">
+             <div className="absolute top-8 right-8 text-slate-800"><Database size={120} /></div>
+             <div className="space-y-6 relative z-10">
+               <h4 className="text-orange-500 font-bold uppercase tracking-widest text-sm">Agentic Capabilities</h4>
+               <ul className="space-y-5">
+                 <li className="flex gap-4 items-start">
+                   <CheckCircle2 className="text-orange-500 shrink-0 mt-1" />
+                   <span className="text-white text-lg font-medium">Automatic Scope Gap Identification</span>
+                 </li>
+                 <li className="flex gap-4 items-start">
+                   <CheckCircle2 className="text-orange-500 shrink-0 mt-1" />
+                   <span className="text-white text-lg font-medium">Real-time Drawing vs. Submittal Scrutiny</span>
+                 </li>
+                 <li className="flex gap-4 items-start">
+                   <CheckCircle2 className="text-orange-500 shrink-0 mt-1" />
+                   <span className="text-white text-lg font-medium">Instant Pre-Bid Risk Synthesis</span>
+                 </li>
+               </ul>
+             </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Greg: Clearing the Innovation Backlog",
+      subtitle: "IT as the Hero, Not the Bottleneck",
+      content: (
+        <div className="flex flex-col space-y-10 h-full">
+          <div className="grid grid-cols-2 gap-10">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800">
+              <h3 className="text-3xl font-bold text-white mb-6">Zero API Dev Time</h3>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                We have <span className="text-white font-semibold">100+ out-of-the-box connectors</span> for SharePoint, ERPs, and more. There is literally no API development required. 
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {['SharePoint', 'SAP', 'Sage 300', 'BIM 360', 'Excel', 'Teams'].map(tag => (
+                  <span key={tag} className="px-4 py-2 bg-slate-800 text-orange-500 rounded-xl text-sm font-bold border border-slate-700">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800">
+              <h3 className="text-3xl font-bold text-white mb-6">Upleveling the Entire Org</h3>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                Purpose-built for construction, Procore AI clears your IT backlog by providing ready-made governance. IT becomes the catalyst for clearing 18-month roadblocks.
+              </p>
+            </div>
+          </div>
+          <div className="bg-gradient-to-r from-orange-600/20 to-transparent p-8 rounded-3xl border border-orange-500/30 text-center">
+            <p className="text-2xl text-white font-medium italic">"We aren't adding another project to IT; we're giving them the platform to automate the rest."</p>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "The Rebuttal: Addressing Hallucinations",
+      subtitle: "Human-in-the-Loop vs. Running Wild",
+      content: (
+        <div className="grid grid-cols-2 gap-12 h-full items-center">
+          <div className="space-y-8">
+            <h3 className="text-4xl font-bold text-white leading-tight">You don't let a Jr PE run wild—why let AI?</h3>
+            <p className="text-slate-400 text-xl leading-relaxed">
+              Hallucinations are managed the same way you manage new hires: <span className="text-orange-500 font-bold">Verification.</span>
+            </p>
+            <div className="space-y-6">
+              <div className="flex items-start gap-6 bg-slate-900 p-6 rounded-2xl">
+                <ShieldCheck className="text-orange-500 w-10 h-10 shrink-0" />
+                <div>
+                  <p className="text-xl font-bold text-white">Professional Services Guardrails</p>
+                  <p className="text-slate-400">Mastering prompting and 'Human in the Loop' to ensure solutions don't become problems.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-6 bg-slate-900 p-6 rounded-2xl">
+                <FileSearch className="text-orange-500 w-10 h-10 shrink-0" />
+                <div>
+                  <p className="text-xl font-bold text-white">Verifiable Grounding</p>
+                  <p className="text-slate-400">Procore AI is grounded in your data. If it says it, it cites the exact page in the spec book.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-slate-950 border-2 border-slate-800 p-12 rounded-[3rem] text-center shadow-2xl">
+            <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Users className="text-orange-500" size={40} />
+            </div>
+            <h4 className="text-2xl font-bold text-white mb-6">The Real Risk?</h4>
+            <p className="text-slate-300 text-lg mb-8 italic">
+              "You have enough issues today with your PEs and Jr PMs hallucinating as it is—no need to have Procore AI do the same."
+            </p>
+            <div className="inline-block px-6 py-2 bg-green-500/10 text-green-500 rounded-full font-bold text-sm">
+              SOLUTION: THE HUMAN IN THE LOOP
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Jeff: The Fractional Super",
+      subtitle: "30 Years of Judgment in Every PE's Toolbelt",
+      content: (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 h-full">
+          <div className="bg-slate-900 p-10 rounded-3xl border border-slate-800 flex flex-col justify-between">
+            <div>
+              <HardHat className="text-orange-500 mb-6" size={48} />
+              <h3 className="text-3xl font-bold text-white mb-4">Institutional Memory</h3>
+              <p className="text-slate-400 text-lg leading-relaxed">
+                Your Jr PEs have 1-2 years experience. Give them a <span className="text-white font-bold italic">Fractional Super</span>: a no-BS solution with the judgment of a 30-year veteran.
+              </p>
+            </div>
+            <div className="mt-8 space-y-3">
+              <p className="text-slate-500 font-bold uppercase text-xs tracking-widest">Available Skills</p>
+              <div className="flex flex-wrap gap-2">
+                 <span className="px-3 py-1 bg-slate-800 rounded text-slate-300 text-sm">Cross-Reference 2000pg Specs</span>
+                 <span className="px-3 py-1 bg-slate-800 rounded text-slate-300 text-sm">Recall Every Past Rejection</span>
+                 <span className="px-3 py-1 bg-slate-800 rounded text-slate-300 text-sm">Respond to Text Queries</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 flex-1">
+              <MessageSquare className="text-orange-500 mb-4" />
+              <h4 className="text-xl font-bold text-white mb-2">Upleveled Talent</h4>
+              <p className="text-slate-400 font-medium italic">
+                Training, advancement, and retention move in the right direction because your staff has a safety net.
+              </p>
+            </div>
+            <div className="bg-orange-600 p-10 rounded-3xl flex flex-col justify-center items-center text-center">
+              <Clock className="text-white mb-4" size={40} />
+              <h4 className="text-3xl font-bold text-white mb-2">15 Hours a Week</h4>
+              <p className="text-orange-100 text-lg">
+                Focus on strategy or <span className="font-bold underline">leave the trailer before the sun goes down</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "The Agentic RAG Architecture",
+      subtitle: "Datagrid-Powered Action, Not Just Answers",
+      content: (
+        <div className="flex flex-col justify-center h-full">
+          <div className="bg-slate-900 p-12 rounded-[3rem] border border-slate-800 shadow-2xl">
+            <div className="flex items-center justify-between mb-16 relative">
+              <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-800 -z-10"></div>
+              {[
+                { icon: <Database />, label: "RETRIEVAL", sub: "100+ Sources" },
+                { icon: <Cpu />, label: "REASONING", sub: "Construction-Logic" },
+                { icon: <Zap />, label: "ACTION", sub: "Draft RFIs/Alerts" }
+              ].map((item, i) => (
+                <div key={i} className="bg-slate-900 border-4 border-slate-800 p-8 rounded-3xl text-center space-y-3 shadow-lg group hover:border-orange-500 transition-all duration-300">
+                  <div className="text-orange-500 flex justify-center">{item.icon}</div>
+                  <p className="font-black text-white">{item.label}</p>
+                  <p className="text-xs text-slate-500 font-bold tracking-widest">{item.sub}</p>
+                </div>
+              ))}
+            </div>
+            <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 text-slate-400 text-center font-medium">
+              <span className="text-orange-500 font-black">THE DIFFERENTIATOR:</span> Most RAG is "read-only." Our Agentic RAG is <span className="text-white underline">"write-aware."</span> It initiates workflows directly in your Procore system.
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "ABC Construction: The Roadmap",
+      subtitle: "Implementation & Enterprise Sovereignty",
+      content: (
+        <div className="grid grid-cols-2 gap-12 h-full">
+          <div className="space-y-6">
+             <h3 className="text-3xl font-bold text-white mb-8 underline decoration-orange-500">Execution Schedule</h3>
+             <div className="space-y-4">
+                {[
+                  { phase: "Pilot (30 Days)", detail: "Deploy 'Spec Review Agent' for Jeff's PEs." },
+                  { phase: "Connect (60 Days)", detail: "Ingest 10YR Historical Archives for Gustav." },
+                  { phase: "Sovereign (90+ Days)", detail: "IT clears backlog; ABC Way automated." }
+                ].map((step, i) => (
+                  <div key={i} className="flex items-center gap-6 bg-slate-900 p-6 rounded-[2rem] border border-slate-800 hover:bg-slate-800/50 transition-colors">
+                    <span className="text-orange-500 font-black text-3xl">0{i+1}</span>
+                    <div>
+                      <p className="text-white font-bold text-xl">{step.phase}</p>
+                      <p className="text-slate-500">{step.detail}</p>
+                    </div>
+                  </div>
+                ))}
+             </div>
+          </div>
+          <div className="bg-orange-600 rounded-[3rem] p-12 text-white flex flex-col justify-between shadow-2xl shadow-orange-900/40">
+            <div className="space-y-6">
+              <h3 className="text-4xl font-black">Profit Protection</h3>
+              <p className="text-orange-100 text-xl leading-relaxed">
+                On 2-5% margins, we aren't selling a feature. We are selling <span className="font-black text-white underline">Sovereign Intelligence</span>.
+              </p>
+            </div>
+            <div className="space-y-4 pt-12 border-t border-orange-500">
+              <div className="flex justify-between items-center"><span className="font-bold">Labor Efficiency</span> <span className="bg-white text-orange-600 px-3 py-1 rounded-lg font-black">+15%</span></div>
+              <div className="flex justify-between items-center"><span className="font-bold">Rework Savings</span> <span className="bg-white text-orange-600 px-3 py-1 rounded-lg font-black">+30%</span></div>
+              <div className="flex justify-between items-center"><span className="font-bold">IT Dev Costs</span> <span className="bg-white text-orange-600 px-3 py-1 rounded-lg font-black">-100%</span></div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  ];
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col overflow-hidden">
+      {/* Navigation */}
+      <nav className="p-8 border-b border-slate-900 flex justify-between items-center bg-slate-950/80 backdrop-blur-xl z-20">
+        <div className="flex items-center gap-4 group cursor-default">
+          <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-orange-600/20 group-hover:scale-110 transition-transform">P</div>
+          <span className="font-black tracking-tighter text-2xl uppercase">PROCORE <span className="text-orange-500">AI</span></span>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-black">Project Sovereignty</span>
+            <div className="h-1 bg-slate-800 w-48 rounded-full mt-1 overflow-hidden">
+              <div 
+                className="h-full bg-orange-500 transition-all duration-700 ease-out" 
+                style={{ width: `${((currentSlide + 1) / slides.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+          <span className="text-sm font-black text-slate-600 tabular-nums">{currentSlide + 1} / {slides.length}</span>
+        </div>
+      </nav>
+
+      {/* Slide View */}
+      <main className="flex-grow flex items-center justify-center px-12 relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 -left-20 w-96 h-96 bg-orange-600/5 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-0 -right-20 w-96 h-96 bg-slate-500/5 blur-[120px] rounded-full"></div>
+        
+        <div className="max-w-7xl w-full h-[650px] flex flex-col relative z-10 transition-all duration-500 animate-in fade-in slide-in-from-bottom-8">
+          <div className="mb-14">
+            <p className="text-orange-500 font-black uppercase tracking-[0.4em] text-xs mb-3 pl-1">{slides[currentSlide].title}</p>
+            <h3 className="text-5xl font-black text-white tracking-tight leading-tight">{slides[currentSlide].subtitle}</h3>
+          </div>
+          
+          <div className="flex-grow">
+            {slides[currentSlide].content}
+          </div>
+        </div>
+      </main>
+
+      {/* Footer / Controls */}
+      <footer className="p-10 flex justify-between items-center border-t border-slate-900 bg-slate-950/50">
+        <div className="text-slate-600 text-xs font-bold uppercase tracking-widest">
+          ABC Construction <span className="mx-2">|</span> Solution Specialist Final Round
+        </div>
+        <div className="flex gap-6">
+          <button 
+            onClick={prevSlide}
+            className="p-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all text-slate-500 hover:text-white"
+          >
+            <ChevronLeft size={28} />
+          </button>
+          <button 
+            onClick={nextSlide}
+            className="group flex items-center gap-4 px-10 py-4 rounded-2xl bg-orange-600 hover:bg-orange-500 transition-all text-white font-black shadow-xl shadow-orange-900/40 hover:scale-[1.02] active:scale-95"
+          >
+            {currentSlide === slides.length - 1 ? "FINALIZE STRATEGY" : "PROCEED"}
+            <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
