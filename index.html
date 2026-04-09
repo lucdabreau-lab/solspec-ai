@@ -1,25 +1,26 @@
-<!-- Chosen Palette: Warm Neutrals & Subtle Accents (Stone, Sky Blue, Muted Green, Amber) -->
-<!-- Application Structure Plan: The SPA uses a tabbed, stakeholder-focused dashboard structure. Instead of a linear slide deck, users navigate by persona (Overview, Operations, Innovation, Executive). This allows the presenter or user to jump directly to the pain points and solutions relevant to specific ABC Construction stakeholders (Jeff, Greg, Gustav). Interactive toggles within sections reveal "Before/After" states, emphasizing the transformation brought by Procore AI and Datagrid. -->
-<!-- Visualization & Content Choices: 
-1. Overview Stats: Goal -> Inform -> Big Number text blocks -> Highlights the scale of the problem (10 yrs data, 2000pg specs). NO SVG.
-2. Ops (Jeff) Review Tax: Goal -> Compare -> Interactive Donut Chart (Chart.js) -> Toggle between 'Manual' and 'Digital PE' states to show the 15-hour recovery. 
-3. IT (Greg) Backlog vs Datagrid: Goal -> Compare -> Horizontal Bar Chart (Chart.js) -> Stark contrast between 18-month API build and 1-month Datagrid OOTB setup.
-4. IT Data Flow: Goal -> Organize/Process -> HTML/CSS Grid with Unicode arrows -> Shows how data moves without migrating silos. NO SVG/Mermaid.
-5. Exec (Gustav) Risk Exposure: Goal -> Change -> Line Chart (Chart.js) -> Shows cumulative risk reduction over a 24-month project lifecycle. -->
-<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procore AI: Scaling The ABC Way</title>
+    <title>Procore AI: The ABC Construction Intelligence Layer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --procore-orange: #ff5200;
+            --procore-black: #000000;
+            --procore-beige: #ece0d6;
+            --stone-200: #e7e5e4;
+            --stone-600: #57534e;
+        }
         body {
-            background-color: #fafaf9;
-            color: #292524;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--procore-beige);
+            color: var(--procore-black);
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
         }
         .nav-button {
@@ -27,29 +28,15 @@
             border-left: 4px solid transparent;
         }
         .nav-button.active {
-            background-color: #f5f5f4;
-            border-left-color: #0369a1;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-left-color: var(--procore-orange);
             font-weight: 600;
-            color: #0369a1;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+            color: var(--procore-orange);
         }
         .card-elevation {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             background-color: #ffffff;
-            border: 1px solid #e7e5e4;
+            border: 1px solid var(--stone-200);
         }
         .tab-content {
             display: none;
@@ -62,238 +49,216 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .diagram-node {
-            background-color: #f5f5f4;
-            border: 1px solid #d6d3d1;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            text-align: center;
-        }
-        .unicode-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            display: block;
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
         }
         .toggle-active {
-            background-color: #ffffff;
-            color: #1c1917;
+            background-color: var(--procore-black);
+            color: #ffffff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen">
 
-    <nav class="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-10 shadow-sm">
-        <div class="p-6 border-b border-stone-200">
-            <div class="text-2xl font-bold text-stone-800 tracking-tight">ABC <span class="text-sky-700 font-light">Digital</span></div>
-            <div class="text-xs text-stone-500 uppercase tracking-widest mt-1">AI Solution Specialist Panel</div>
+    <!-- Sidebar Navigation -->
+    <nav class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-10 shadow-sm">
+        <div class="p-8 border-b border-stone-200">
+            <div class="flex items-center gap-3 mb-1">
+                <img src="https://media.ffycdn.net/us/procore/S6UJZNwtDGmWLKXWFYf8.png?width=200" alt="Procore Logo" class="w-24 h-auto object-contain">
+                <span class="text-xl font-bold tracking-tight uppercase">ABC <span class="text-[#ff5200] font-light">Growth</span></span>
+            </div>
+            <div class="text-[10px] text-stone-500 uppercase tracking-[0.2em] mt-1 font-semibold">Procore AI Strategy Panel</div>
         </div>
-        <div class="flex flex-row md:flex-col overflow-x-auto md:overflow-visible p-2">
-            <button onclick="switchTab('overview')" id="btn-overview" class="nav-button active text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 whitespace-nowrap md:whitespace-normal mb-1">
-                &#128202; Executive Summary
+        <div class="flex flex-row md:flex-col p-4 space-y-1">
+            <button onclick="switchTab('overview')" id="btn-overview" class="nav-button active text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#128203;</span> Executive Summary
             </button>
-            <button onclick="switchTab('ops')" id="btn-ops" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 whitespace-nowrap md:whitespace-normal mb-1">
-                &#128119; Field Ops (Jeff)
+            <button onclick="switchTab('exec')" id="btn-exec" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#128200;</span> Precon (Gustav)
             </button>
-            <button onclick="switchTab('it')" id="btn-it" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 whitespace-nowrap md:whitespace-normal mb-1">
-                &#128187; IT & Trust (Greg)
+            <button onclick="switchTab('datagrid')" id="btn-datagrid" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#9881;</span> Innovation (Greg)
             </button>
-            <button onclick="switchTab('exec')" id="btn-exec" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 whitespace-nowrap md:whitespace-normal">
-                &#128188; Boardroom (Gustav)
+            <button onclick="switchTab('ops')" id="btn-ops" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#128119;</span> Field & PM (Jeff)
             </button>
         </div>
-        <div class="hidden md:block mt-auto p-6 text-xs text-stone-400">
-            ABC Construction Interview<br>April 2026
+        <div class="hidden md:block mt-auto p-8 text-[11px] text-stone-400 leading-relaxed border-t border-stone-100">
+            <strong>Prepared for ABC Construction</strong><br>
+            Gustav, Greg, and Jeff<br>
+            Solution Specialist: Procore Technologies
         </div>
     </nav>
 
-    <main class="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 bg-stone-50">
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16 bg-transparent">
         <div class="max-w-5xl mx-auto">
 
+            <!-- OVERVIEW TAB -->
             <section id="overview" class="tab-content active">
-                <div class="mb-8">
-                    <h1 class="text-3xl md:text-4xl font-semibold text-stone-800 mb-3">Unlocking Institutional Memory</h1>
-                    <p class="text-stone-600 text-lg leading-relaxed">
-                        ABC Construction is at a crossroads. As you scale into high-stakes Healthcare and Mission Critical sectors, the "Institutional Memory" gap is widening. This presentation outlines how <strong>Procore AI</strong> acts as your "Fractional Super"—protecting your margins by turning buried data into real-time certainty.
+                <div class="mb-12">
+                    <h1 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">Your Digital PE and Fractional Super</h1>
+                    <p class="text-stone-600 text-lg leading-relaxed max-w-3xl">
+                        ABC Construction is scaling. With growth comes the "Friction Gap"—the distance between your legacy data and today's decisions. Procore AI closes this gap, acting as a force multiplier for Gustav's portfolio, Greg's workflows, and Jeff's field capture.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="card-elevation rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-                        <div class="text-4xl font-bold text-sky-700 mb-2">10 Years</div>
-                        <div class="text-sm font-semibold text-stone-500 uppercase tracking-wide">Buried Data</div>
-                        <p class="text-xs text-stone-600 mt-3">Siloed in SharePoint and legacy ERPs, hidden from the field.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="card-elevation rounded-2xl p-8 border-b-4 border-[#ff5200]">
+                        <div class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Manual Tax</div>
+                        <div class="text-4xl font-bold text-stone-900">15+ Hrs</div>
+                        <p class="text-xs text-stone-500 mt-4 leading-relaxed">Weekly PM time lost to submittal data entry and administrative verification.</p>
                     </div>
-                    <div class="card-elevation rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-                        <div class="text-4xl font-bold text-amber-600 mb-2">2,000+</div>
-                        <div class="text-sm font-semibold text-stone-500 uppercase tracking-wide">Spec Pages</div>
-                        <p class="text-xs text-stone-600 mt-3">Overwhelming junior staff and causing missed discrepancies.</p>
+                    <div class="card-elevation rounded-2xl p-8 border-b-4 border-black">
+                        <div class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Data Silos</div>
+                        <div class="text-4xl font-bold text-stone-900">10 Years</div>
+                        <p class="text-xs text-stone-500 mt-4 leading-relaxed">Hidden institutional knowledge trapped in legacy folders and retired PM notebooks.</p>
                     </div>
-                    <div class="card-elevation rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
-                        <div class="text-4xl font-bold text-red-700 mb-2">15 Hours</div>
-                        <div class="text-sm font-semibold text-stone-500 uppercase tracking-wide">Weekly Review Tax</div>
-                        <p class="text-xs text-stone-600 mt-3">Time lost by senior PMs double-checking basic PE work.</p>
+                    <div class="card-elevation rounded-2xl p-8 border-b-4 border-stone-400">
+                        <div class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Growth Capacity</div>
+                        <div class="text-4xl font-bold text-stone-900">+20%</div>
+                        <p class="text-xs text-stone-500 mt-4 leading-relaxed">Ability to scale into Mission Critical sectors without a linear headcount increase.</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl card-elevation p-8 border-l-4 border-sky-700 flex flex-col md:flex-row items-center gap-6">
+                <div class="bg-black rounded-2xl p-10 text-white flex flex-col md:flex-row items-center gap-8">
                     <div class="flex-1">
-                        <h2 class="text-xl font-semibold text-stone-800 mb-2">The Procore AI Mandate</h2>
-                        <p class="text-stone-600 text-sm">
-                            We don't replace people; we augment them. Our <strong>"Human-in-the-Loop"</strong> philosophy ensures that your senior veterans can focus on high-level strategy while the AI handles the documentation cross-referencing.
+                        <h2 class="text-2xl font-bold mb-3">The AI Mandate for ABC</h2>
+                        <p class="text-stone-300 text-sm leading-relaxed">
+                            We aren't replacing your talent. We are augmenting Gustav's estimators, Greg's folks, and Jeff's newbies with a <strong>"Digital PE"</strong> that handles the heavy lifting of data extraction and cross-referencing.
                         </p>
                     </div>
-                    <div class="w-full md:w-1/3 flex justify-center">
-                        <button onclick="switchTab('ops')" class="bg-sky-700 text-white px-6 py-2 rounded-lg hover:bg-sky-800 transition-colors shadow-lg">Start Interaction &rarr;</button>
-                    </div>
+                    <button onclick="switchTab('exec')" class="bg-[#ff5200] hover:bg-orange-500 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg whitespace-nowrap">Start with Precon &rarr;</button>
                 </div>
             </section>
 
-            <section id="ops" class="tab-content">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-semibold text-stone-800 mb-2">Field Ops: Reclaiming 15 Hours</h1>
-                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
-                        Jeff's senior PMs are acting as "expensive proofreaders." Use the toggle below to see how Procore AI shifts the burden of documentation review.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="card-elevation rounded-xl p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-semibold text-stone-800">Ops Time Allocation</h3>
-                            <div class="bg-stone-100 p-1 rounded-lg inline-flex shadow-inner">
-                                <button onclick="updateOpsChart('manual')" id="toggle-manual" class="toggle-active px-3 py-1 text-xs font-medium rounded transition-all">Manual Process</button>
-                                <button onclick="updateOpsChart('ai')" id="toggle-ai" class="px-3 py-1 text-xs font-medium rounded text-stone-500 hover:text-stone-800 transition-all">With Procore AI</button>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="opsDonutChart"></canvas>
-                        </div>
-                        <p id="ops-desc" class="text-xs text-stone-400 text-center mt-4">Manual: 38% of senior PM time is spent double-checking junior submittals.</p>
-                    </div>
-
-                    <div class="flex flex-col justify-between">
-                        <div class="space-y-4">
-                            <div class="card-elevation rounded-xl p-5 border-t-2 border-sky-600">
-                                <h4 class="font-bold text-sky-800 text-sm mb-1">&#128161; Proactive Discrepancy Alert</h4>
-                                <p class="text-xs text-stone-600">AI automatically flags if a window submittal conflicts with a Revision #4 structural change before the PM even opens the file.</p>
-                            </div>
-                            <div class="card-elevation rounded-xl p-5 border-t-2 border-amber-500">
-                                <h4 class="font-bold text-amber-800 text-sm mb-1">&#128214; Institutional Memory</h4>
-                                <p class="text-xs text-stone-600">Junior PEs can ask the AI: "How did we handle medical gas piping on the 2022 St. Jude project?" and get an instant grounded answer.</p>
-                            </div>
-                            <div class="card-elevation rounded-xl p-5 border-t-2 border-stone-400">
-                                <h4 class="font-bold text-stone-800 text-sm mb-1">&#128119; Skill Upleveling</h4>
-                                <p class="text-xs text-stone-600">Training happens in real-time. PEs learn <em>why</em> the AI flagged an error, faster than a weekly mentor meeting.</p>
-                            </div>
-                        </div>
-                        <div class="mt-6 text-center">
-                            <p class="text-sm font-medium text-stone-800">"Give Jeff his Sundays back."</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="it" class="tab-content">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-semibold text-stone-800 mb-2">IT & Trust: The "Receipts" Engine</h1>
-                    <p class="text-stone-600 text-sm leading-relaxed">
-                        Greg can't wait 18 months for custom API builds. Procore Datagrid provides the <strong>"Direct Line"</strong> to his data with total security.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div class="card-elevation rounded-xl p-6">
-                        <h3 class="text-lg font-semibold text-stone-800 mb-4">Implementation Speed</h3>
-                        <div class="chart-container">
-                            <canvas id="itBarChart"></canvas>
-                        </div>
-                        <p class="text-xs text-stone-400 text-center mt-4">Datagrid eliminates the IT backlog by using pre-built connectors for SharePoint and ERPs.</p>
-                    </div>
-
-                    <div class="card-elevation rounded-xl p-6 flex flex-col justify-center bg-stone-50 border-dashed border-2">
-                        <h3 class="text-lg font-semibold text-stone-800 mb-4 text-center">Why Procore Trust Matters</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-3">
-                                <span class="bg-white p-2 rounded-full shadow text-blue-600 font-bold">&#10003;</span>
-                                <span class="text-sm text-stone-700 italic">No hallucinations—Source-grounded data only.</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="bg-white p-2 rounded-full shadow text-blue-600 font-bold">&#10003;</span>
-                                <span class="text-sm text-stone-700 italic">"View Source" link for every AI claim.</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="bg-white p-2 rounded-full shadow text-blue-600 font-bold">&#10003;</span>
-                                <span class="text-sm text-stone-700 italic">Your data is NEVER used to train external models.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-elevation rounded-xl p-8 bg-white">
-                    <h3 class="text-lg font-semibold text-stone-800 mb-6 text-center italic">Datagrid: Data Stays Where It Lives</h3>
-                    <div class="flex flex-col md:flex-row items-center justify-center gap-6">
-                        <div class="diagram-node w-full md:w-1/4 shadow-sm">
-                            <span class="unicode-icon text-stone-400">&#128451;</span>
-                            <span class="text-xs font-bold text-stone-700 uppercase">Legacy Silos</span>
-                            <div class="text-[10px] text-stone-500 mt-1">SharePoint / ERP</div>
-                        </div>
-                        <div class="text-stone-300 text-2xl font-light rotate-90 md:rotate-0">&rarr;</div>
-                        <div class="diagram-node w-full md:w-1/3 bg-sky-50 border-sky-200 shadow-md">
-                            <span class="unicode-icon text-sky-600">&#128423;</span>
-                            <span class="text-xs font-bold text-sky-800 uppercase tracking-tighter">Procore Datagrid</span>
-                            <div class="text-[10px] text-sky-600 mt-1">Intelligent Connectors</div>
-                        </div>
-                        <div class="text-stone-300 text-2xl font-light rotate-90 md:rotate-0">&rarr;</div>
-                        <div class="diagram-node w-full md:w-1/4 bg-stone-800 border-stone-800 text-white">
-                            <span class="unicode-icon text-white">&#10024;</span>
-                            <span class="text-xs font-bold uppercase tracking-tighter">Digital PE</span>
-                            <div class="text-[10px] text-stone-400 mt-1">Procore AI</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+            <!-- GUSTAV (PRECON) TAB -->
             <section id="exec" class="tab-content">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-semibold text-stone-800 mb-2">The Boardroom Case: Flattening the Risk Curve</h1>
-                    <p class="text-stone-600 text-sm leading-relaxed mb-4">
-                        For Gustav, Procore AI is a <strong>risk-mitigation asset</strong>. It ensures that complex Healthcare builds stay profitable by catching mistakes before they reach the slab.
-                    </p>
+                <div class="mb-10 text-left">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2">Precon (Gustav): Flattening the Risk Curve</h2>
+                    <p class="text-stone-500 text-sm leading-relaxed max-w-2xl">Gustav, Procore AI isn't just software; it's a <strong>financial hedging asset</strong> for your complex Healthcare builds.</p>
                 </div>
 
-                <div class="card-elevation rounded-xl p-8 mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-semibold text-stone-800">Project Risk Over Time</h3>
-                        <div class="text-xs text-stone-500 bg-stone-100 px-3 py-1 rounded-full italic">High-Complexity Healthcare Build</div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="execLineChart"></canvas>
-                    </div>
-                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                            <span class="text-xs text-stone-600">Manual Process: Risk compounds until commissioning.</span>
+                <div class="mb-8">
+                    <div class="card-elevation rounded-2xl p-10 h-full">
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h3 class="text-lg font-bold text-stone-900">Project Risk Exposure</h3>
+                                <p class="text-xs text-stone-400">Cumulative risk over a 24-month lifecycle.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-stone-300 rounded-full"></div>
+                                    <span class="text-[10px] font-bold text-stone-400 uppercase">Legacy</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-[#ff5200] rounded-full"></div>
+                                    <span class="text-[10px] font-bold text-stone-400 uppercase">AI-Driven</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-full bg-green-600"></div>
-                            <span class="text-xs text-stone-600">Procore AI: Early detection flattens financial exposure.</span>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="execLineChart"></canvas>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white card-elevation rounded-lg p-5 border-l-4 border-stone-400">
-                        <h4 class="font-bold text-stone-800 text-sm mb-1 uppercase tracking-tighter">Strategic Bidding</h4>
-                        <p class="text-[11px] text-stone-500">Stop "bidding blind" by surfacing historical risk data from the past 10 years in seconds.</p>
+                    <div class="bg-white border border-stone-200 p-6 rounded-xl">
+                        <h4 class="font-bold text-xs uppercase text-stone-400 mb-3 tracking-widest">Visibility</h4>
+                        <p class="text-xs text-stone-600 leading-relaxed">Identify the "Problem Project" before the budget is blown.</p>
                     </div>
-                    <div class="bg-white card-elevation rounded-lg p-5 border-l-4 border-sky-600">
-                        <h4 class="font-bold text-sky-800 text-sm mb-1 uppercase tracking-tighter">Scaling Without Overhead</h4>
-                        <p class="text-[11px] text-stone-500">Take on 20% more complex projects without a linear increase in senior headcount.</p>
+                    <div class="bg-white border border-stone-200 p-6 rounded-xl">
+                        <h4 class="font-bold text-xs uppercase text-stone-400 mb-3 tracking-widest">Scale</h4>
+                        <p class="text-xs text-stone-600 leading-relaxed">Take on Data Centers with automated compliance checking.</p>
                     </div>
-                    <div class="bg-stone-800 card-elevation rounded-lg p-5 border-l-4 border-amber-500 text-white">
-                        <h4 class="font-bold text-amber-500 text-sm mb-1 uppercase tracking-tighter">The ABC Way</h4>
-                        <p class="text-[11px] text-stone-300">Ensure institutional knowledge isn't lost when senior supervisors retire. It's built into the system.</p>
+                    <div class="bg-black p-6 rounded-xl text-white">
+                        <h4 class="font-bold text-xs uppercase text-[#ff5200] mb-3 tracking-widest">ABC Legacy</h4>
+                        <p class="text-xs text-stone-300 leading-relaxed">Institutional memory stays built into the ABC Digital PE.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GREG (INNOVATION) TAB -->
+            <section id="datagrid" class="tab-content">
+                <div class="mb-10 text-left">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-4">Innovation: The DataGrid Advantage</h2>
+                    <p class="text-stone-500 text-sm max-w-2xl">Greg can't wait for 18-month API integrations. DataGrid provides the <strong>Direct-to-Data</strong> connection today.</p>
+                </div>
+
+                <div class="mb-12">
+                    <div class="card-elevation rounded-2xl p-8">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-stone-400 mb-6">Implementation Speed (Months)</h3>
+                        <div class="chart-container">
+                            <canvas id="itBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white border-2 border-dashed border-stone-200 rounded-2xl p-8 flex flex-col justify-center">
+                        <h3 class="font-bold text-stone-800 mb-4">Procore Trust Pillars</h3>
+                        <div class="space-y-4">
+                            <div class="flex gap-3 text-xs text-stone-600">
+                                <span class="text-[#ff5200] font-bold">&#10003;</span>
+                                <span><strong>Source Grounding:</strong> Every AI claim links back to a source file.</span>
+                            </div>
+                            <div class="flex gap-3 text-xs text-stone-600">
+                                <span class="text-[#ff5200] font-bold">&#10003;</span>
+                                <span><strong>No Migration Required:</strong> Connects to where your files live today.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-black text-white rounded-2xl flex items-center justify-center text-center">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#ff5200] mb-2">Outcome</p>
+                            <p class="text-xl font-bold">Predictive Decisions from Day 1</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- JEFF (FIELD & PM) TAB -->
+            <section id="ops" class="tab-content">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2">Reclaiming Jeff's Evenings</h2>
+                    <p class="text-stone-500 text-sm">Jeff's current process is reactive. Procore AI makes it predictive.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card-elevation rounded-2xl p-8">
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h3 class="text-sm font-bold uppercase tracking-widest text-stone-400">ROI: Bandwidth Transformation</h3>
+                                <p class="text-[10px] text-stone-400">Time split across project activities</p>
+                            </div>
+                            <div class="bg-stone-100 p-1 rounded-lg flex shadow-inner">
+                                <button onclick="updateOpsChart('manual')" id="toggle-manual" class="toggle-active px-4 py-1.5 text-[10px] font-bold uppercase rounded transition-all">Legacy</button>
+                                <button onclick="updateOpsChart('ai')" id="toggle-ai" class="px-4 py-1.5 text-[10px] font-bold uppercase rounded text-stone-500 transition-all">AI-Powered</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="opsDonutChart"></canvas>
+                        </div>
+                        <p id="ops-desc" class="text-xs text-stone-600 font-semibold text-center mt-6">Legacy: 85% of time spent on Manual Admin & Submittal Entry.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-[#ff5200]">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128451; Automated Submittal Logs</h4>
+                            <p class="text-xs text-stone-500 leading-relaxed">DataGrid parses 1,000 pages in minutes. Jeff reviews the output instead of typing it.</p>
+                        </div>
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-black">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128227; Field Voice Logs</h4>
+                            <p class="text-xs text-stone-500 leading-relaxed">Jeff dictates daily logs. Procore AI automatically tags safety observations and weather impacts.</p>
+                        </div>
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-stone-300">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128214; Skill Upleveling</h4>
+                            <p class="text-xs text-stone-500 leading-relaxed">Jeff's newbies learn from AI-driven discrepancies, surfacing issues before they hit the slab.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -309,42 +274,6 @@
 
         const chartInstances = {};
 
-        function wrapLabel(label) {
-            if (label.length <= 16) return label;
-            const words = label.split(' ');
-            const lines = [];
-            let currentLine = '';
-            words.forEach(word => {
-                if ((currentLine + word).length > 16) {
-                    if (currentLine.trim() !== '') lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            });
-            if (currentLine.trim() !== '') lines.push(currentLine.trim());
-            return lines;
-        }
-
-        const tooltipConfig = {
-            callbacks: {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    return Array.isArray(label) ? label.join(' ') : label;
-                }
-            },
-            backgroundColor: '#1c1917',
-            titleColor: '#ffffff',
-            bodyColor: '#e7e5e4',
-            padding: 10,
-            cornerRadius: 6,
-            displayColors: false
-        };
-
-        Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
-        Chart.defaults.color = '#78716c';
-
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-button').forEach(el => el.classList.remove('active'));
@@ -354,14 +283,18 @@
             
             appState.currentTab = tabId;
 
-            // Trigger chart animations if visible
-            if (tabId === 'ops' && chartInstances.ops) chartInstances.ops.update();
-            if (tabId === 'it' && chartInstances.it) chartInstances.it.update();
-            if (tabId === 'exec' && chartInstances.exec) chartInstances.exec.update();
+            // Update charts on tab entry
+            if (chartInstances.ops) chartInstances.ops.update();
+            if (chartInstances.it) chartInstances.it.update();
+            if (chartInstances.exec) chartInstances.exec.update();
         }
 
         function initCharts() {
-            // Ops Chart
+            // Setup Chart.js defaults
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#78716c';
+
+            // Ops Donut Chart (ROI Focused)
             const ctxOps = document.getElementById('opsDonutChart').getContext('2d');
             chartInstances.ops = new Chart(ctxOps, {
                 type: 'doughnut',
@@ -369,83 +302,80 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
+                    cutout: '75%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { padding: 20, boxWidth: 10, font: { size: 10 } } },
-                        tooltip: tooltipConfig
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 25, font: { size: 10, weight: '600' } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (item) => ` ${item.label}: ${item.raw}%`
+                            }
+                        }
                     }
                 }
             });
 
-            // IT Chart
+            // IT Bar Chart
             const ctxIt = document.getElementById('itBarChart').getContext('2d');
             chartInstances.it = new Chart(ctxIt, {
                 type: 'bar',
                 data: {
-                    labels: [wrapLabel('Build Custom Connectors (Backlog)'), wrapLabel('Procore Datagrid (OOTB)')],
+                    labels: ['Custom API Build', 'DataGrid OOTB'],
                     datasets: [{
-                        label: 'Months',
+                        label: 'Months to Implementation',
                         data: [18, 1],
-                        backgroundColor: ['#d6d3d1', '#0369a1'],
-                        borderRadius: 5
+                        backgroundColor: ['#e7e5e4', '#ff5200'],
+                        borderRadius: 8,
+                        barThickness: 32
                     }]
                 },
                 options: {
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: tooltipConfig
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { color: '#f5f5f4' }, title: { display: true, text: 'Months' } },
+                        x: { grid: { display: false } },
                         y: { grid: { display: false } }
                     }
                 }
             });
 
-            // Executive Risk Chart
+            // Executive Line Chart
             const ctxExec = document.getElementById('execLineChart').getContext('2d');
             chartInstances.exec = new Chart(ctxExec, {
                 type: 'line',
                 data: {
-                    labels: ['Bidding', 'Submittals', 'Procurement', 'Installation', 'Punch List'],
+                    labels: ['Pre-Con', 'Submittals', 'Procurement', 'Installation', 'Commissioning'],
                     datasets: [
                         {
-                            label: wrapLabel('Risk w/o Procore AI'),
-                            data: [10, 45, 60, 85, 100],
-                            borderColor: '#f59e0b',
-                            backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                            label: 'Legacy Risk',
+                            data: [15, 45, 65, 85, 100],
+                            borderColor: '#a8a29e',
+                            borderWidth: 2,
                             fill: true,
-                            tension: 0.3,
-                            pointRadius: 4
+                            backgroundColor: 'rgba(168, 162, 158, 0.05)',
+                            tension: 0.4,
+                            pointRadius: 0
                         },
                         {
-                            label: wrapLabel('Risk w/ Procore AI'),
-                            data: [5, 15, 22, 28, 32],
-                            borderColor: '#16a34a',
-                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            label: 'AI-Driven Risk',
+                            data: [8, 18, 22, 28, 30],
+                            borderColor: '#ff5200',
+                            borderWidth: 3,
                             fill: true,
-                            tension: 0.3,
-                            pointRadius: 4
+                            backgroundColor: 'rgba(255, 82, 0, 0.1)',
+                            tension: 0.4,
+                            pointRadius: 0
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: tooltipConfig
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { display: false } },
-                        y: { 
-                            grid: { color: '#f5f5f4' },
-                            title: { display: true, text: 'Exposure Level' },
-                            beginAtZero: true
-                        }
+                        y: { beginAtZero: true, grid: { color: '#f5f5f4' }, title: { display: true, text: 'Exposure %' } },
+                        x: { grid: { display: false } }
                     }
                 }
             });
@@ -454,19 +384,19 @@
         function getOpsData(state) {
             if (state === 'manual') {
                 return {
-                    labels: [wrapLabel('Strategic PM Management'), wrapLabel('PE Review Tax'), wrapLabel('Admin/Firefighting')],
+                    labels: ['Admin/Entry', 'Strategy/Quality'],
                     datasets: [{
-                        data: [15, 15, 10],
-                        backgroundColor: ['#e7e5e4', '#ca8a04', '#d6d3d1'],
+                        data: [85, 15],
+                        backgroundColor: ['#ff5200', '#f5f5f4'],
                         borderWidth: 0
                     }]
                 };
             } else {
                 return {
-                    labels: [wrapLabel('Strategic PM Management (Reclaimed)'), wrapLabel('AI Assisted Review'), wrapLabel('Admin/Firefighting')],
+                    labels: ['AI Oversight', 'Strategic High-Value'],
                     datasets: [{
-                        data: [28, 2, 10],
-                        backgroundColor: ['#0369a1', '#84cc16', '#d6d3d1'],
+                        data: [20, 80],
+                        backgroundColor: ['#d1d5db', '#ff5200'],
                         borderWidth: 0
                     }]
                 };
@@ -475,7 +405,6 @@
 
         function updateOpsChart(state) {
             if (appState.opsChartState === state) return;
-            
             appState.opsChartState = state;
             chartInstances.ops.data = getOpsData(state);
             chartInstances.ops.update();
@@ -485,13 +414,13 @@
             const desc = document.getElementById('ops-desc');
 
             if (state === 'manual') {
-                toggleManual.className = "toggle-active px-3 py-1 text-xs font-medium rounded transition-all";
-                toggleAi.className = "px-3 py-1 text-xs font-medium rounded text-stone-500 hover:text-stone-800 transition-all";
-                desc.textContent = "Manual: 38% of senior PM time is spent double-checking junior submittals.";
+                toggleManual.className = "toggle-active px-4 py-1.5 text-[10px] font-bold uppercase rounded transition-all";
+                toggleAi.className = "px-4 py-1.5 text-[10px] font-bold uppercase rounded text-stone-500 transition-all";
+                desc.textContent = "Legacy: 85% of time spent on Manual Admin & Submittal Entry.";
             } else {
-                toggleAi.className = "toggle-active px-3 py-1 text-xs font-medium rounded transition-all";
-                toggleManual.className = "px-3 py-1 text-xs font-medium rounded text-stone-500 hover:text-stone-800 transition-all";
-                desc.textContent = "AI Enhanced: Reclaim 13 hours/week for strategic high-margin activities.";
+                toggleAi.className = "toggle-active px-4 py-1.5 text-[10px] font-bold uppercase rounded transition-all";
+                toggleManual.className = "px-4 py-1.5 text-[10px] font-bold uppercase rounded text-stone-500 transition-all";
+                desc.textContent = "AI-Powered ROI: 80% of bandwidth reclaimed for Strategic Site Quality.";
             }
         }
 
