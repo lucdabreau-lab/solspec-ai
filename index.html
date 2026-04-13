@@ -59,12 +59,21 @@
             color: #ffffff;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+        .agent-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--procore-orange);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen">
 
     <!-- Sidebar Navigation -->
-    <nav class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-10 shadow-sm">
+    <nav class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-10 shadow-sm flex flex-col">
         <div class="p-8 border-b border-stone-200">
             <div class="flex items-center gap-3 mb-1">
                 <img src="https://media.ffycdn.net/us/procore/S6UJZNwtDGmWLKXWFYf8.png?width=200" alt="Procore Logo" class="w-24 h-auto object-contain">
@@ -72,10 +81,17 @@
             </div>
             <div class="text-[10px] text-stone-500 uppercase tracking-[0.2em] mt-1 font-semibold">Procore AI Strategy Panel</div>
         </div>
-        <div class="flex flex-row md:flex-col p-4 space-y-1">
+        <div class="flex flex-row md:flex-col p-4 space-y-1 overflow-y-auto flex-1">
             <button onclick="switchTab('overview')" id="btn-overview" class="nav-button active text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
                 <span>&#128203;</span> Executive Summary
             </button>
+            <button onclick="switchTab('pivot')" id="btn-pivot" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#128260;</span> Strategic Pivot
+            </button>
+            <button onclick="switchTab('agents')" id="btn-agents" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
+                <span>&#129302;</span> Agentic Advantage
+            </button>
+            <div class="border-t border-stone-100 my-2 pt-2"></div>
             <button onclick="switchTab('exec')" id="btn-exec" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
                 <span>&#128200;</span> Precon (Gustav)
             </button>
@@ -86,7 +102,7 @@
                 <span>&#128119;</span> Field & PM (Jeff)
             </button>
         </div>
-        <div class="hidden md:block mt-auto p-8 text-[11px] text-stone-400 leading-relaxed border-t border-stone-100">
+        <div class="hidden md:block p-8 text-[11px] text-stone-400 leading-relaxed border-t border-stone-100">
             <strong>Prepared for ABC Construction</strong><br>
             Gustav, Greg, and Jeff<br>
             Solution Specialist: Procore Technologies
@@ -97,7 +113,7 @@
     <main class="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16 bg-transparent">
         <div class="max-w-5xl mx-auto">
 
-            <!-- OVERVIEW TAB -->
+            <!-- TAB 1: EXECUTIVE SUMMARY -->
             <section id="overview" class="tab-content active">
                 <div class="mb-12">
                     <h1 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">Your Digital PE and Fractional Super</h1>
@@ -131,15 +147,112 @@
                             We aren't replacing your talent. We are augmenting Gustav's estimators, Greg's folks, and Jeff's newbies with a <strong>"Digital PE"</strong> that handles the heavy lifting of data extraction and cross-referencing.
                         </p>
                     </div>
-                    <button onclick="switchTab('exec')" class="bg-[#ff5200] hover:bg-orange-500 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg whitespace-nowrap">Start with Precon &rarr;</button>
+                    <button onclick="switchTab('pivot')" class="bg-[#ff5200] hover:bg-orange-500 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg whitespace-nowrap">The Strategic Pivot &rarr;</button>
                 </div>
             </section>
 
-            <!-- GUSTAV (PRECON) TAB -->
+            <!-- TAB 2: STRATEGIC PIVOT -->
+            <section id="pivot" class="tab-content">
+                <div class="mb-12">
+                    <h1 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">The Strategic Pivot: Records to Reasoning</h1>
+                    <p class="text-stone-600 text-lg leading-relaxed max-w-3xl">
+                        ABC Construction is moving beyond traditional storage. We are shifting from a repository that just holds data to an intelligence layer that actually <strong>reasons</strong> with it.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8">
+                        <div class="flex gap-6 items-start">
+                            <div class="w-12 h-12 rounded-full bg-stone-200 flex items-center justify-center font-bold text-stone-500 shrink-0 italic">1.0</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-stone-900 mb-2">The Records Era (Legacy)</h3>
+                                <p class="text-sm text-stone-500 leading-relaxed">Data is passive. Finding an answer requires Jeff or Greg to remember where a file is, open it, and manually extract information. Errors occur when "institutional memory" retires.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 items-start">
+                            <div class="w-12 h-12 rounded-full bg-[#ff5200] text-white flex items-center justify-center font-bold shrink-0">2.0</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-stone-900 mb-2">The Reasoning Era (Procore AI)</h3>
+                                <p class="text-sm text-stone-500 leading-relaxed">Data is active. Procore AI understands the <strong>intent</strong> behind an RFI or Spec. It connects the dots between the 10-year archive and today's Mission Critical bid.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl card-elevation relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-5">
+                            <span class="text-9xl font-bold">ABC</span>
+                        </div>
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-6">Autonomous Intelligence Layer</h4>
+                        <div class="space-y-4">
+                            <div class="p-4 border border-stone-100 rounded-xl bg-stone-50 flex justify-between items-center">
+                                <span class="text-sm font-semibold">Assistive Intelligence</span>
+                                <span class="text-xs text-stone-400 italic">"Find the spec"</span>
+                            </div>
+                            <div class="flex justify-center text-[#ff5200] py-2">
+                                <span class="text-xl">&darr;</span>
+                            </div>
+                            <div class="p-6 border-2 border-[#ff5200] rounded-xl bg-orange-50 flex justify-between items-center">
+                                <span class="text-sm font-bold text-[#ff5200]">Autonomous Reasoning</span>
+                                <span class="text-xs text-[#ff5200] font-bold">"Solve the conflict"</span>
+                            </div>
+                        </div>
+                        <p class="mt-8 text-xs text-stone-400 italic text-center">Protecting the 2-5% margin with agentic precision.</p>
+                    </div>
+                </div>
+                <div class="mt-12 text-center">
+                    <button onclick="switchTab('agents')" class="bg-black text-white px-8 py-3 rounded-full font-semibold transition-all">Meet your AI Agents &rarr;</button>
+                </div>
+            </section>
+
+            <!-- TAB 3: AGENTIC ADVANTAGE -->
+            <section id="agents" class="tab-content">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2">The Digital PE Army</h2>
+                    <p class="text-stone-500 text-sm leading-relaxed max-w-2xl">Traditional software finds information; Procore AI Agents act on it. These specialized agents work 24/7 across ABC's high-stakes Healthcare and Mission Critical portfolio.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="agent-card bg-white p-8 rounded-2xl border border-stone-200">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">01.</div>
+                        <h4 class="font-bold text-stone-900 mb-2 text-lg">Deep Search Agent</h4>
+                        <p class="text-xs text-stone-500 leading-relaxed">Reasons across technical specs, drawing revisions, and tabular ERP data simultaneously to answer field questions instantly.</p>
+                    </div>
+                    <div class="agent-card bg-white p-8 rounded-2xl border border-stone-200">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">02.</div>
+                        <h4 class="font-bold text-stone-900 mb-2 text-lg">Spec Checker</h4>
+                        <p class="text-xs text-stone-500 leading-relaxed">Automated gatekeeper for Jr PEs. Flags discrepancy between Revision 4 structural changes and Revision 1 window submittals.</p>
+                    </div>
+                    <div class="agent-card bg-white p-8 rounded-2xl border border-stone-200">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">03.</div>
+                        <h4 class="font-bold text-stone-900 mb-2 text-lg">SOP Compliance Agent</h4>
+                        <p class="text-xs text-stone-500 leading-relaxed">Ensures 100% of Jeff's daily logs and Greg's RFIs adhere to ABC's safety and documentation standards across every regional office.</p>
+                    </div>
+                    <div class="agent-card bg-white p-8 rounded-2xl border border-stone-200">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">04.</div>
+                        <h4 class="font-bold text-stone-900 mb-2 text-lg">RFI Validator</h4>
+                        <p class="text-xs text-stone-500 leading-relaxed">Drafts RFIs automatically, identifying trivial requests vs. critical scope gaps before they hit the designer's desk.</p>
+                    </div>
+                    <div class="agent-card bg-white p-8 rounded-2xl border border-stone-200">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">05.</div>
+                        <h4 class="font-bold text-stone-900 mb-2 text-lg">Risk Sentinel</h4>
+                        <p class="text-xs text-stone-500 leading-relaxed">Analyzes 10 years of institutional memory to predict potential rework incidents based on early project signals.</p>
+                    </div>
+                    <div class="agent-card bg-black p-8 rounded-2xl border border-black text-white">
+                        <div class="text-[#ff5200] text-2xl mb-4 font-bold tracking-tighter">06.</div>
+                        <h4 class="font-bold mb-2 text-lg">Digital PE Hub</h4>
+                        <p class="text-xs text-stone-400 leading-relaxed">The unified command center that orchestrates this agent army to protect ABC's 2-5% margins.</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 p-8 bg-white/50 rounded-3xl border border-dashed border-stone-300 text-center">
+                    <p class="text-stone-500 text-sm font-semibold italic">"Procore AI acts as a Fractional Super for every ABC project team."</p>
+                </div>
+            </section>
+
+            <!-- TAB 4: GUSTAV (PRECON) -->
             <section id="exec" class="tab-content">
                 <div class="mb-10 text-left">
                     <h2 class="text-3xl font-bold text-stone-900 mb-2">Preconstruction: Flattening the Risk Curve</h2>
-                    <p class="text-stone-500 text-sm leading-relaxed max-w-2xl">Gustav, Procore AI isn't just software; it's a <strong>financial hedging asset</strong> for your complex Healthcare builds.</p>
+                    <p class="text-stone-500 text-sm leading-relaxed max-w-2xl">Gustav, Procore AI isn't just software; it's a <strong>financial hedging asset</strong> for your Mission Critical and Healthcare builds.</p>
                 </div>
 
                 <div class="mb-8">
@@ -182,11 +295,11 @@
                 </div>
             </section>
 
-            <!-- GREG (INNOVATION) TAB -->
+            <!-- TAB 5: GREG (INNOVATION) -->
             <section id="datagrid" class="tab-content">
                 <div class="mb-10 text-left">
-                    <h2 class="text-3xl font-bold text-stone-900 mb-4">Innovation: The DataGrid Advantage</h2>
-                    <p class="text-stone-500 text-sm max-w-2xl">Greg can't wait for 18-month API integrations. DataGrid provides the <strong>Direct-to-Data</strong> connection today.</p>
+                    <h2 class="text-3xl font-bold text-stone-900 mb-4 text-left">Innovation: The DataGrid Advantage</h2>
+                    <p class="text-stone-500 text-sm max-w-2xl text-left">Greg can't wait for 18-month API integrations. DataGrid provides the <strong>Direct-to-Data</strong> connection today.</p>
                 </div>
 
                 <div class="mb-12">
@@ -221,7 +334,7 @@
                 </div>
             </section>
 
-            <!-- JEFF (FIELD & PM) TAB -->
+            <!-- TAB 6: JEFF (FIELD & PM) -->
             <section id="ops" class="tab-content">
                 <div class="mb-10">
                     <h2 class="text-3xl font-bold text-stone-900 mb-2">Reclaiming Jeff's Evenings</h2>
@@ -283,10 +396,12 @@
             
             appState.currentTab = tabId;
 
-            // Update charts on tab entry
-            if (chartInstances.ops) chartInstances.ops.update();
-            if (chartInstances.it) chartInstances.it.update();
-            if (chartInstances.exec) chartInstances.exec.update();
+            // Short delay to ensure DOM is ready for chart updates
+            setTimeout(() => {
+                if (chartInstances.ops) chartInstances.ops.update();
+                if (chartInstances.it) chartInstances.it.update();
+                if (chartInstances.exec) chartInstances.exec.update();
+            }, 100);
         }
 
         function initCharts() {
@@ -426,5 +541,6 @@
 
         window.onload = initCharts;
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </body>
 </html>
