@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Procore AI: The ABC Construction Intelligence Layer</title>
+    <!-- External Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
         :root {
             --procore-orange: #ff5200;
@@ -17,91 +20,122 @@
             --stone-200: #e7e5e4;
             --stone-600: #57534e;
         }
+
         body {
             background-color: var(--procore-beige);
             color: var(--procore-black);
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Prevent body scroll, use container scroll */
         }
+
         .nav-button {
             transition: all 0.2s ease-in-out;
             border-left: 4px solid transparent;
         }
+
         .nav-button.active {
             background-color: rgba(0, 0, 0, 0.05);
             border-left-color: var(--procore-orange);
             font-weight: 600;
             color: var(--procore-orange);
         }
+
         .card-elevation {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             background-color: #ffffff;
             border: 1px solid var(--stone-200);
         }
+
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: fadeIn 0.4s ease-in-out forwards;
         }
+
         .tab-content.active {
             display: block;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
+
         .toggle-active {
             background-color: var(--procore-black);
-            color: #ffffff;
+            color: #ffffff !important;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+
         .agent-card {
             transition: all 0.3s ease;
             cursor: pointer;
         }
+
         .agent-card:hover {
             transform: translateY(-5px);
             border-color: var(--procore-orange);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
         }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen">
 
     <!-- Sidebar Navigation -->
-    <nav class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-10 shadow-sm flex flex-col">
-        <div class="p-8 border-b border-stone-200">
+    <nav class="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-stone-200 flex-shrink-0 z-20 shadow-sm flex flex-col">
+        <div class="p-6 md:p-8 border-b border-stone-200">
             <div class="flex items-center gap-3 mb-1">
-                <img src="https://media.ffycdn.net/us/procore/S6UJZNwtDGmWLKXWFYf8.png?width=200" alt="Procore Logo" class="w-24 h-auto object-contain">
-                <span class="text-xl font-bold tracking-tight uppercase">ABC <span class="text-[#ff5200] font-light">Growth</span></span>
+                <img src="https://media.ffycdn.net/us/procore/S6UJZNwtDGmWLKXWFYf8.png?width=200" 
+                     alt="Procore Logo" 
+                     class="w-20 md:w-24 h-auto object-contain"
+                     onerror="this.src='https://placehold.co/100x40?text=PROCORE'">
+                <span class="text-lg md:text-xl font-bold tracking-tight uppercase">ABC <span class="text-[#ff5200] font-light">Growth</span></span>
             </div>
             <div class="text-[10px] text-stone-500 uppercase tracking-[0.2em] mt-1 font-semibold">Procore AI Strategy Panel</div>
         </div>
-        <div class="flex flex-row md:flex-col p-4 space-y-1 overflow-y-auto flex-1">
-            <button onclick="switchTab('overview')" id="btn-overview" class="nav-button active text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#128203;</span> Executive Summary
+        
+        <div class="flex flex-row md:flex-col p-2 md:p-4 space-x-1 md:space-x-0 md:space-y-1 overflow-x-auto md:overflow-y-auto flex-1 no-scrollbar md:no-scrollbar-none">
+            <button onclick="switchTab('overview')" id="btn-overview" class="nav-button active text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-file-lines w-5 text-center"></i> Executive Summary
             </button>
-            <button onclick="switchTab('pivot')" id="btn-pivot" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#128260;</span> Strategic Pivot
+            <button onclick="switchTab('pivot')" id="btn-pivot" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-arrows-spin w-5 text-center"></i> Strategic Pivot
             </button>
-            <button onclick="switchTab('agents')" id="btn-agents" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#129302;</span> Agentic Advantage
+            <button onclick="switchTab('agents')" id="btn-agents" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-robot w-5 text-center"></i> Agentic Advantage
             </button>
-            <div class="border-t border-stone-100 my-2 pt-2"></div>
-            <button onclick="switchTab('exec')" id="btn-exec" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#128200;</span> Precon (Gustav)
+            <div class="hidden md:block border-t border-stone-100 my-2 pt-2"></div>
+            <button onclick="switchTab('exec')" id="btn-exec" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-chart-line w-5 text-center"></i> Precon (Gustav)
             </button>
-            <button onclick="switchTab('datagrid')" id="btn-datagrid" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#9881;</span> Innovation (Greg)
+            <button onclick="switchTab('datagrid')" id="btn-datagrid" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-gear w-5 text-center"></i> Innovation (Greg)
             </button>
-            <button onclick="switchTab('ops')" id="btn-ops" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3">
-                <span>&#128119;</span> Field & PM (Jeff)
+            <button onclick="switchTab('ops')" id="btn-ops" class="nav-button text-left px-4 py-3 rounded-md text-stone-600 hover:bg-stone-50 flex items-center gap-3 whitespace-nowrap md:whitespace-normal">
+                <i class="fa-solid fa-helmet-safety w-5 text-center"></i> Field & PM (Jeff)
             </button>
         </div>
+
         <div class="hidden md:block p-8 text-[11px] text-stone-400 leading-relaxed border-t border-stone-100">
             <strong>Prepared for ABC Construction</strong><br>
             Gustav, Greg, and Jeff<br>
@@ -110,13 +144,13 @@
     </nav>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16 bg-transparent">
-        <div class="max-w-5xl mx-auto">
+    <main class="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16">
+        <div class="max-w-5xl mx-auto pb-20 md:pb-0">
 
             <!-- TAB 1: EXECUTIVE SUMMARY -->
             <section id="overview" class="tab-content active">
                 <div class="mb-12">
-                    <h1 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">Your Digital PE and Fractional Super</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4 tracking-tight">Your Digital PE and Fractional Super</h1>
                     <p class="text-stone-600 text-lg leading-relaxed max-w-3xl">
                         ABC Construction is scaling. With growth comes the "Friction Gap"—the distance between your legacy data and today's decisions. Procore AI closes this gap, acting as a force multiplier for Gustav's portfolio, Greg's workflows, and Jeff's field capture.
                     </p>
@@ -140,8 +174,8 @@
                     </div>
                 </div>
 
-                <div class="bg-black rounded-2xl p-10 text-white flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-1">
+                <div class="bg-black rounded-2xl p-8 md:p-10 text-white flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1 text-center md:text-left">
                         <h2 class="text-2xl font-bold mb-3">The AI Mandate for ABC</h2>
                         <p class="text-stone-300 text-sm leading-relaxed">
                             We aren't replacing your talent. We are augmenting Gustav's estimators, Greg's folks, and Jeff's newbies with a <strong>"Digital PE"</strong> that handles the heavy lifting of data extraction and cross-referencing.
@@ -154,7 +188,7 @@
             <!-- TAB 2: STRATEGIC PIVOT -->
             <section id="pivot" class="tab-content">
                 <div class="mb-12">
-                    <h1 class="text-4xl font-bold text-stone-900 mb-4 tracking-tight">The Strategic Pivot: Records to Reasoning</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-stone-900 mb-4 tracking-tight">Records to Reasoning</h1>
                     <p class="text-stone-600 text-lg leading-relaxed max-w-3xl">
                         ABC Construction is moving beyond traditional storage. We are shifting from a repository that just holds data to an intelligence layer that actually <strong>reasons</strong> with it.
                     </p>
@@ -170,7 +204,7 @@
                             </div>
                         </div>
                         <div class="flex gap-6 items-start">
-                            <div class="w-12 h-12 rounded-full bg-[#ff5200] text-white flex items-center justify-center font-bold shrink-0">2.0</div>
+                            <div class="w-12 h-12 rounded-full bg-[#ff5200] text-white flex items-center justify-center font-bold shrink-0 shadow-md">2.0</div>
                             <div>
                                 <h3 class="text-xl font-bold text-stone-900 mb-2">The Reasoning Era (Procore AI)</h3>
                                 <p class="text-sm text-stone-500 leading-relaxed">Data is active. Procore AI understands the <strong>intent</strong> behind an RFI or Spec. It connects the dots between the 10-year archive and today's Mission Critical bid.</p>
@@ -178,7 +212,7 @@
                         </div>
                     </div>
                     <div class="bg-white p-8 rounded-3xl card-elevation relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-5">
+                        <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                             <span class="text-9xl font-bold">ABC</span>
                         </div>
                         <h4 class="text-xs font-bold uppercase tracking-widest text-stone-400 mb-6">Autonomous Intelligence Layer</h4>
@@ -188,9 +222,9 @@
                                 <span class="text-xs text-stone-400 italic">"Find the spec"</span>
                             </div>
                             <div class="flex justify-center text-[#ff5200] py-2">
-                                <span class="text-xl">&darr;</span>
+                                <i class="fa-solid fa-arrow-down animate-bounce"></i>
                             </div>
-                            <div class="p-6 border-2 border-[#ff5200] rounded-xl bg-orange-50 flex justify-between items-center">
+                            <div class="p-6 border-2 border-[#ff5200] rounded-xl bg-orange-50 flex justify-between items-center shadow-sm">
                                 <span class="text-sm font-bold text-[#ff5200]">Autonomous Reasoning</span>
                                 <span class="text-xs text-[#ff5200] font-bold">"Solve the conflict"</span>
                             </div>
@@ -199,7 +233,7 @@
                     </div>
                 </div>
                 <div class="mt-12 text-center">
-                    <button onclick="switchTab('agents')" class="bg-black text-white px-8 py-3 rounded-full font-semibold transition-all">Meet your AI Agents &rarr;</button>
+                    <button onclick="switchTab('agents')" class="bg-black text-white px-8 py-3 rounded-full font-semibold transition-all hover:bg-stone-800">Meet your AI Agents &rarr;</button>
                 </div>
             </section>
 
@@ -251,13 +285,13 @@
             <!-- TAB 4: GUSTAV (PRECON) -->
             <section id="exec" class="tab-content">
                 <div class="mb-10 text-left">
-                    <h2 class="text-3xl font-bold text-stone-900 mb-2">Preconstruction: Flattening the Risk Curve</h2>
+                    <h2 class="text-3xl font-bold text-stone-900 mb-2">Preconstruction: Risk Flattening</h2>
                     <p class="text-stone-500 text-sm leading-relaxed max-w-2xl">Gustav, Procore AI isn't just software; it's a <strong>financial hedging asset</strong> for your Mission Critical and Healthcare builds.</p>
                 </div>
 
                 <div class="mb-8">
-                    <div class="card-elevation rounded-2xl p-10 h-full">
-                        <div class="flex justify-between items-center mb-8">
+                    <div class="card-elevation rounded-2xl p-6 md:p-10 h-full">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                             <div>
                                 <h3 class="text-lg font-bold text-stone-900">Project Risk Exposure</h3>
                                 <p class="text-xs text-stone-400">Cumulative risk over a 24-month lifecycle.</p>
@@ -273,7 +307,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 300px;">
+                        <div class="chart-container">
                             <canvas id="execLineChart"></canvas>
                         </div>
                     </div>
@@ -297,9 +331,9 @@
 
             <!-- TAB 5: GREG (INNOVATION) -->
             <section id="datagrid" class="tab-content">
-                <div class="mb-10 text-left">
-                    <h2 class="text-3xl font-bold text-stone-900 mb-4 text-left">Innovation: The DataGrid Advantage</h2>
-                    <p class="text-stone-500 text-sm max-w-2xl text-left">Greg can't wait for 18-month API integrations. DataGrid provides the <strong>Direct-to-Data</strong> connection today.</p>
+                <div class="mb-10">
+                    <h2 class="text-3xl font-bold text-stone-900 mb-4">Innovation: The DataGrid Advantage</h2>
+                    <p class="text-stone-500 text-sm max-w-2xl">Greg can't wait for 18-month API integrations. DataGrid provides the <strong>Direct-to-Data</strong> connection today.</p>
                 </div>
 
                 <div class="mb-12">
@@ -316,16 +350,16 @@
                         <h3 class="font-bold text-stone-800 mb-4">Procore Trust Pillars</h3>
                         <div class="space-y-4">
                             <div class="flex gap-3 text-xs text-stone-600">
-                                <span class="text-[#ff5200] font-bold">&#10003;</span>
+                                <span class="text-[#ff5200] font-bold"><i class="fa-solid fa-check"></i></span>
                                 <span><strong>Source Grounding:</strong> Every AI claim links back to a source file.</span>
                             </div>
                             <div class="flex gap-3 text-xs text-stone-600">
-                                <span class="text-[#ff5200] font-bold">&#10003;</span>
+                                <span class="text-[#ff5200] font-bold"><i class="fa-solid fa-check"></i></span>
                                 <span><strong>No Migration Required:</strong> Connects to where your files live today.</span>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4 bg-black text-white rounded-2xl flex items-center justify-center text-center">
+                    <div class="p-4 bg-black text-white rounded-2xl flex items-center justify-center text-center shadow-xl">
                         <div>
                             <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#ff5200] mb-2">Outcome</p>
                             <p class="text-xl font-bold">Predictive Decisions from Day 1</p>
@@ -343,7 +377,7 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="card-elevation rounded-2xl p-8">
-                        <div class="flex justify-between items-center mb-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                             <div>
                                 <h3 class="text-sm font-bold uppercase tracking-widest text-stone-400">ROI: Bandwidth Transformation</h3>
                                 <p class="text-[10px] text-stone-400">Time split across project activities</p>
@@ -360,16 +394,16 @@
                     </div>
 
                     <div class="space-y-4">
-                        <div class="card-elevation rounded-xl p-6 border-l-4 border-[#ff5200]">
-                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128451; Automated Submittal Logs</h4>
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-[#ff5200] hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2"><i class="fa-solid fa-list-check mr-2 text-[#ff5200]"></i> Automated Submittal Logs</h4>
                             <p class="text-xs text-stone-500 leading-relaxed">DataGrid parses 1,000 pages in minutes. Jeff reviews the output instead of typing it.</p>
                         </div>
-                        <div class="card-elevation rounded-xl p-6 border-l-4 border-black">
-                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128227; Field Voice Logs</h4>
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-black hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2"><i class="fa-solid fa-microphone mr-2 text-stone-700"></i> Field Voice Logs</h4>
                             <p class="text-xs text-stone-500 leading-relaxed">Jeff dictates daily logs. Procore AI automatically tags safety observations and weather impacts.</p>
                         </div>
-                        <div class="card-elevation rounded-xl p-6 border-l-4 border-stone-300">
-                            <h4 class="font-bold text-stone-900 text-sm mb-2">&#128214; Skill Upleveling</h4>
+                        <div class="card-elevation rounded-xl p-6 border-l-4 border-stone-300 hover:shadow-md transition-shadow">
+                            <h4 class="font-bold text-stone-900 text-sm mb-2"><i class="fa-solid fa-book mr-2 text-stone-400"></i> Skill Upleveling</h4>
                             <p class="text-xs text-stone-500 leading-relaxed">Jeff's newbies learn from AI-driven discrepancies, surfacing issues before they hit the slab.</p>
                         </div>
                     </div>
@@ -388,20 +422,23 @@
         const chartInstances = {};
 
         function switchTab(tabId) {
+            // Update UI elements
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-button').forEach(el => el.classList.remove('active'));
             
             document.getElementById(tabId).classList.add('active');
-            document.getElementById('btn-' + tabId).classList.add('active');
+            const navBtn = document.getElementById('btn-' + tabId);
+            if(navBtn) navBtn.classList.add('active');
             
             appState.currentTab = tabId;
 
-            // Short delay to ensure DOM is ready for chart updates
+            // Trigger chart updates for the active tab (Chart.js needs visible canvas to render properly)
             setTimeout(() => {
-                if (chartInstances.ops) chartInstances.ops.update();
-                if (chartInstances.it) chartInstances.it.update();
-                if (chartInstances.exec) chartInstances.exec.update();
-            }, 100);
+                Object.values(chartInstances).forEach(chart => {
+                    chart.resize();
+                    chart.update();
+                });
+            }, 50);
         }
 
         function initCharts() {
@@ -409,7 +446,7 @@
             Chart.defaults.font.family = "'Inter', sans-serif";
             Chart.defaults.color = '#78716c';
 
-            // Ops Donut Chart (ROI Focused)
+            // 1. Ops Donut Chart (ROI Focused)
             const ctxOps = document.getElementById('opsDonutChart').getContext('2d');
             chartInstances.ops = new Chart(ctxOps, {
                 type: 'doughnut',
@@ -419,7 +456,10 @@
                     maintainAspectRatio: false,
                     cutout: '75%',
                     plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 25, font: { size: 10, weight: '600' } } },
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { boxWidth: 12, padding: 15, font: { size: 10, weight: '600' } } 
+                        },
                         tooltip: {
                             callbacks: {
                                 label: (item) => ` ${item.label}: ${item.raw}%`
@@ -429,7 +469,7 @@
                 }
             });
 
-            // IT Bar Chart
+            // 2. IT Bar Chart
             const ctxIt = document.getElementById('itBarChart').getContext('2d');
             chartInstances.it = new Chart(ctxIt, {
                 type: 'bar',
@@ -449,13 +489,16 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { display: false } },
+                        x: { 
+                            grid: { display: false },
+                            title: { display: true, text: 'Months', font: { size: 10 } }
+                        },
                         y: { grid: { display: false } }
                     }
                 }
             });
 
-            // Executive Line Chart
+            // 3. Executive Line Chart
             const ctxExec = document.getElementById('execLineChart').getContext('2d');
             chartInstances.exec = new Chart(ctxExec, {
                 type: 'line',
@@ -480,7 +523,8 @@
                             fill: true,
                             backgroundColor: 'rgba(255, 82, 0, 0.1)',
                             tension: 0.4,
-                            pointRadius: 0
+                            pointRadius: 4,
+                            pointBackgroundColor: '#ff5200'
                         }
                     ]
                 },
@@ -489,7 +533,11 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: '#f5f5f4' }, title: { display: true, text: 'Exposure %' } },
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#f5f5f4' }, 
+                            title: { display: true, text: 'Risk Exposure %', font: { size: 10 } } 
+                        },
                         x: { grid: { display: false } }
                     }
                 }
@@ -499,7 +547,7 @@
         function getOpsData(state) {
             if (state === 'manual') {
                 return {
-                    labels: ['Admin/Entry', 'Strategic'],
+                    labels: ['Admin/Entry', 'Strategic Site Quality'],
                     datasets: [{
                         data: [85, 15],
                         backgroundColor: ['#e7e5e4', '#ff5200'],
@@ -508,7 +556,7 @@
                 };
             } else {
                 return {
-                    labels: ['AI Oversight', 'Strategic'],
+                    labels: ['AI Oversight', 'Strategic Site Quality'],
                     datasets: [{
                         data: [20, 80],
                         backgroundColor: ['#d1d5db', '#ff5200'],
@@ -529,18 +577,28 @@
             const desc = document.getElementById('ops-desc');
 
             if (state === 'manual') {
-                toggleManual.className = "toggle-active px-4 py-1.5 text-[10px] font-bold uppercase rounded transition-all";
-                toggleAi.className = "px-4 py-1.5 text-[10px] font-bold uppercase rounded text-stone-500 transition-all";
+                toggleManual.classList.add('toggle-active');
+                toggleManual.classList.remove('text-stone-500');
+                toggleAi.classList.remove('toggle-active');
+                toggleAi.classList.add('text-stone-500');
                 desc.textContent = "Legacy: 85% of time spent on Manual Admin & Submittal Entry.";
             } else {
-                toggleAi.className = "toggle-active px-4 py-1.5 text-[10px] font-bold uppercase rounded transition-all";
-                toggleManual.className = "px-4 py-1.5 text-[10px] font-bold uppercase rounded text-stone-500 transition-all";
+                toggleAi.classList.add('toggle-active');
+                toggleAi.classList.remove('text-stone-500');
+                toggleManual.classList.remove('toggle-active');
+                toggleManual.classList.add('text-stone-500');
                 desc.textContent = "AI-Powered ROI: 80% of bandwidth reclaimed for Strategic Site Quality.";
             }
         }
 
-        window.onload = initCharts;
+        // Initialize on window load
+        window.onload = function() {
+            initCharts();
+            // Handle mobile responsive chart resizing
+            window.addEventListener('resize', () => {
+                Object.values(chartInstances).forEach(chart => chart.resize());
+            });
+        };
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </body>
 </html>
